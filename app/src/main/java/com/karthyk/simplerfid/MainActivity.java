@@ -19,6 +19,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -142,8 +143,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override protected String doInBackground(Void... params) {
       byte[] input = readFromDevice();
       if(input != null) {
-        for(int i = 0; i < input.length; i++) {
-          output += String.valueOf(input[0]);
+        try {
+          output = new String(input, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+          Log.d("MainAct", e.toString());
         }
       } else {
         Log.d("MainAct", "Byte Array Null");
@@ -153,7 +156,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override protected void onPostExecute(String s) {
       tvRfidOut.setText(output);
-      Log.d("MainAct_Receiver", s);
+      Log.d("MainAct_Receiver", output);
       super.onPostExecute(s);
     }
   }
